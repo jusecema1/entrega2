@@ -1,0 +1,67 @@
+{{>header}}
+<div class="container">
+    <h3>Inscribir curso</h3>
+    <h5><strong>{{{respuesta}}}</strong></h5>
+
+    <form class="needs-validation" action="/inscripcion/inscribirCurso" method="POST" novalidate>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Cursos</label>
+            {{{selectCursosDisponibleIns}}}
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" placeholder="nombre aspirante" name="nombre"
+                    value="{{persona.nombre}}" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Documento</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" placeholder="documento identidad" name="documento"
+                    value="{{persona.documento}}" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Correo electronico</label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control" placeholder="correo electronico" name="correo"
+                    value="{{persona.correo}}" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Teléfono</label>
+            <div class="col-sm-9">
+                <input type="tel" class="form-control" placeholder="telefono" name="telefono"
+                    value="{{persona.telefono}}" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button class="btn btn-primary">Inscribir</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+</div>
+{{>footer}}
