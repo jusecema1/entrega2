@@ -1,11 +1,18 @@
 /** DEPENDENCIAS */
+require('./config/config');
 const express = require('express');
 const app = express();
 const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+//### Para usar las variables de sesión
+const session = require('express-session')
+var MemoryStore = require('memorystore')(session)
 
-const cursosCtrl = require('../controllers/cursoController');
+const userRoutes = require('./routes/user');
+
+const cursosCtrl = require('./controllers/cursoController');
 
 require('./helpers/helpers');
 require('./helpers/cursoHelpers');
@@ -30,6 +37,46 @@ app.use('/css', express.static(dirNode_modules + '/bootstrap/dist/css'));
 app.use('/js', express.static(dirNode_modules + '/jquery/dist'));
 app.use('/js', express.static(dirNode_modules + '/popper.js/dist'));
 app.use('/js', express.static(dirNode_modules + '/bootstrap/dist/js'));
+
+//### Para usar las variables de sesión
+app.use(session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+    // let token = localStorage.getItem('token')
+
+    //  jwt.verify(token, 'virtual-tdea', (err, decoded) => {
+
+    //        if (err) {
+    //            return next();
+    //        }
+
+    //        req.usuario = decoded.usuario;
+    //        console.log(req.usuario)
+    //        res.locals.sesion = true
+    //        res.locals.nombre = req.usuario.nombre
+    //        next();
+
+    //    });
+
+    //En caso de usar variables de sesión
+    if (req.session.usuario) {
+        res.locals.sesion = true
+        res.locals.nombre = req.session.nombre
+    }
+    next()
+});
+
+
+
+app.use("/users", userRoutes);
 
 
 app.get('/', (req, res) => {
@@ -156,9 +203,15 @@ app.get('*', (req, res) => {
     });
 });
 
+mongoose.connect(process.env.URLDB, { useNewUrlParser: true }, (err, resultado) => {
+    if (err) {
+        return console.log(error)
+    }
+    console.log("conectado")
+});
 
-app.listen(3000, () => {
-    console.log('Escuchando por el puerto 3000');
+app.listen(process.env.PORT, () => {
+    console.log('Escuchando por el puerto ' + process.env.PORT);
 });
 
 module.exports = [

@@ -1,5 +1,5 @@
 const hbs = require('hbs');
-const cursosCtrl = require('../../controllers/cursoController');
+const cursosCtrl = require('../controllers/cursoController');
 
 hbs.registerHelper('listarCursosDisponibles', () => {
     let listaDisponibles = cursosCtrl.getListaCursos().find((c) => { return c.estado === 'disponible'; });
